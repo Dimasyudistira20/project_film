@@ -9,7 +9,7 @@ class Film extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['judul', 'deskripsi', 'foto', 'url', 'id_kategori'];
+    protected $fillable = ['judul', 'desc', 'foto', 'url', 'id_kategori'];
 
     public function kategori (){
         return $this->belongsTo(Kategori::class, 'id_kategori');

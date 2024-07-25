@@ -23,7 +23,7 @@ class FilmController extends Controller
     public function store(Request $request){
         $validate = Validator::make($request->all(), [
             'judul'=> 'required|string|unique:films',
-            'deskripsi'=> 'required|string',
+            'desc'=> 'required|string',
             'foto'=> 'required|image|mimes:png,jpg,jpeg,gif,svg|max:2048',
             'url'=> 'required|string',
             'id_kategori'=> 'required|exists:kategoris,id',
@@ -44,7 +44,7 @@ class FilmController extends Controller
 
             $film = Film::create([
                 'judul' => $request->judul,
-                'deskripsi' => $request->deskripsi,
+                'desc' => $request->desc,
                 'foto' => $path,
                 'url' => $request->url,
                 'id_kategori' => $request->id_kategori,
@@ -90,7 +90,7 @@ class FilmController extends Controller
 
         $validate = Validator::make($request->all(), [
             'judul'=> 'required|string|unique:films' . $id,
-            'deskripsi'=> 'required|string',
+            'desc'=> 'required|string',
             'foto'=> 'required|image|mimes:png,jpg,jpeg,gif,svg|max:2048',
             'url'=> 'required|string',
             'id_kategori'=> 'required|exists:kategoris,id',
@@ -115,7 +115,7 @@ class FilmController extends Controller
                 $film->foto = $path;
             }
 
-            $film->update($request->only(['judul', 'deskripsi', 'url', 'id_kategori']));
+            $film->update($request->only(['judul', 'desc', 'url', 'id_kategori']));
 
             if ($request->has('genre')) {
                 $film->genre()->sync($request->genre);
