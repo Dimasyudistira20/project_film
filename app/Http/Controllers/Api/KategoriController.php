@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Kategori;
+use Illuminate\Http\Request;
 use Validator;
 
 class KategoriController extends Controller
@@ -13,108 +13,110 @@ class KategoriController extends Controller
         $kategori = Kategori::latest()->get();
         $response = [
             'success' => true,
-            'message' => 'Data kategori',
+            'message' => 'Data Kategori',
             'data' => $kategori,
         ];
         return response()->json($response, 200);
     }
 
-    public function store(Request $request){
-        // validate
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'nama_kategori' => 'required|unique:kategoris',
+            'nama' => 'required|unique:kategoris',
         ], [
-            'nama_kategori.required' => 'Masukkan kategori',
-            'nama_kategori.unique' => 'Kategori sudah digunakan!',
+            'nama.required' => 'Masukkan Kategori',
+            'nama.unique' => 'Kategori Sudah Digunakan!',
         ]);
-        
-        if($validator->fails()){
-            return response()->json([
-                'succes' => false,
-                'message' => 'Silahkan isi dengan benar!',
-                'data' => $validator->errors(),
-            ], 400);
-        }else {
-            $kategori = new Kategori;
-            $kategori->nama_kategori = $request->nama_kategori;
-            $kategori->save();
-        }
-        if($kategori){
-            return response()->json([
-                'success' => true,
-                'message' => 'Data berhasil di simpan!',
-            ], 200);
-        }else{
+
+        // application/json {Api error middleware}
+        if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data gagal di simpan!',
+                'message' => 'Silahkan isi dengan benar',
+                'data' => $validator->errors(),
+            ], 400);
+        } else {
+            $kategori = new Kategori;
+            $kategori->nama = $request->nama;
+            $kategori->save();
+        }
+
+        if ($kategori) {
+            return response()->json([
+                'success' => true,
+                'message' => 'data behasil disimpan',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'data gagal disimpan',
             ], 400);
         }
     }
-
     public function show($id){
         $kategori = Kategori::find($id);
 
         if($kategori){
             return response()->json([
                 'success' => true,
-                'message' => 'Detail kategori',
+                'message' => 'Detail Kategori',
                 'data' => $kategori,
             ], 200);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Kategori tidak di temukan',
+                'message' => 'kategori tidak ditemukan',
             ], 404);
         }
     }
-    public function update(Request $request, $id){
-        // validate
+    public function update(Request $request, $id)
+    {
         $validator = Validator::make($request->all(), [
-            'nama_kategori' => 'required|unique:kategoris',
+            'nama' => 'required',
         ], [
-            'nama_kategori.required' => 'Masukkan kategori',
+            'nama.required' => 'Masukkan Kategori',
         ]);
-        
-        if($validator->fails()){
-            return response()->json([
-                'succes' => false,
-                'message' => 'Silahkan isi dengan benar!',
-                'data' => $validator->errors(),
-            ], 400);
-        }else {
-            $kategori = Kategori::find($id);
-            $kategori->nama_kategori = $request->nama_kategori;
-            $kategori->save();
-        }
-        if($kategori){
-            return response()->json([
-                'success' => true,
-                'message' => 'Data berhasil di edit!',
-            ], 200);
-        }else{
+
+        // application/json {Api error middleware}
+        if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Data gagal di edit!',
+                'message' => 'Silahkan isi dengan benar',
+                'data' => $validator->errors(),
+            ], 400);
+        } else {
+            $kategori = Kategori::find($id);
+            $kategori->nama = $request->nama;
+            $kategori->save();
+        }
+
+        if ($kategori) {
+            return response()->json([
+                'success' => true,
+                'message' => 'data behasil disimpan',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'data gagal disimpan',
             ], 400);
         }
     }
-
-    public function destroy($id){
+    public function destroy($id)
+    {
         $kategori = Kategori::find($id);
-        if($kategori){
+        if ($kategori) {
             $kategori->delete();
             return response()->json([
                 'success' => true,
-                'message' => 'data' . $kategori->nama_kategori . 'Berhasil di hapus',
+                'message' => 'data ' . $kategori->nama . ' berhasil dihapus',
             ], 200);
-        }else{
+        } else {
             return response()->json([
-                'success' => false,
-                'message' => 'data tidak di temukan',
-            ], 404);
-        }
-       
-    }
+            'success' => true,
+            'message' => 'Data Tidak Ditemukan',
+        ], 404);
 
+        }
+    }
 }
